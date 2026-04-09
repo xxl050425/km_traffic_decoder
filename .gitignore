@@ -1,0 +1,23 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Build artifacts
+build/
+dist/
+*.spec
+
+# Executables and temporary files
+*.exe
+*.log
+*.tmp
+README.txt
+
+# IDE/editor
+.idea/
+.vscode/
