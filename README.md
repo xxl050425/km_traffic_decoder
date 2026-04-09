@@ -51,7 +51,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\build_exe.ps1
 ## 项目结构
 
 ```text
-km_traffic_decoder_v5/
+km_traffic_decoder/
 ├─ app.py
 ├─ README.md
 ├─ LICENSE
