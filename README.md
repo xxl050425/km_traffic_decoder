@@ -61,20 +61,6 @@ km_traffic_decoder/
    └─ build_exe.ps1
 ```
 
-## 上传到 GitHub
-
-1. 在 GitHub 新建仓库（例如：`km-traffic-decoder`）。
-2. 本地执行：
-
-```powershell
-git init
-git add .
-git commit -m "init: keymouse traffic decoder project"
-git branch -M main
-git remote add origin <你的仓库地址>
-git push -u origin main
-```
-
 ## 说明
 
 - `*.exe`、`build/`、`dist/` 默认已被 `.gitignore` 忽略。
