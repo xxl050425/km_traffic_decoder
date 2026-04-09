@@ -64,4 +64,4 @@ km_traffic_decoder/
 ## 说明
 
 - `*.exe`、`build/`、`dist/` 默认已被 `.gitignore` 忽略。
-- 建议把可执行文件放到 GitHub Releases，而不是直接进仓库历史。
+- EXE 不直接放在仓库文件中，使用 GitHub Packages 分发（见仓库 `Packages` 页面）。

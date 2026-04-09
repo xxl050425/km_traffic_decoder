@@ -1,0 +1,72 @@
+name: Publish EXE To GitHub Packages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "app.py"
+      - "requirements-dev.txt"
+      - "scripts/build_exe.ps1"
+      - ".github/workflows/publish-exe-package.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build EXE
+        shell: powershell
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pyinstaller
+          pyinstaller --noconfirm --clean --onefile --windowed --name km_traffic_decoder .\app.py
+
+      - name: Setup Node For GitHub Packages
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@xxl050425"
+
+      - name: Prepare Package Files
+        shell: powershell
+        run: |
+          $pkgDir = "npm-package"
+          New-Item -ItemType Directory -Path $pkgDir -Force | Out-Null
+          Copy-Item -LiteralPath ".\dist\km_traffic_decoder.exe" -Destination (Join-Path $pkgDir "km_traffic_decoder.exe") -Force
+
+          $version = "1.0.${{ github.run_number }}"
+          $pkgObj = @{
+            name = "@xxl050425/km-traffic-decoder-exe"
+            version = $version
+            description = "Windows executable for keymouse traffic decoder"
+            license = "MIT"
+            repository = @{
+              type = "git"
+              url = "git+https://github.com/xxl050425/km_traffic_decoder.git"
+            }
+            files = @("km_traffic_decoder.exe")
+          }
+          $pkgObj | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $pkgDir "package.json") -Encoding UTF8
+          Set-Content -LiteralPath (Join-Path $pkgDir "README.md") -Encoding UTF8 -Value "GitHub Packages EXE distribution for km_traffic_decoder."
+
+      - name: Publish To Packages
+        working-directory: npm-package
+        shell: powershell
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm publish

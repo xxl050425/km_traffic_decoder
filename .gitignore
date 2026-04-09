@@ -14,7 +14,6 @@ dist/
 
 # Executables and temporary files
 *.exe
-!km_traffic_decoder.exe
 *.log
 *.tmp
 README.txt
